@@ -69,11 +69,13 @@ async function registerSecurityKey(options?: {
   saveRegistration("security-key", registration);
 }
 
-async function auth(): Promise<PublicKeyCredentialWithAssertionJSON> {
+async function auth(
+  options?: Parameters<typeof getRegistrations>[0]
+): Promise<PublicKeyCredentialWithAssertionJSON> {
   return await get({
     publicKey: {
       challenge: randomBase64urlBytes(),
-      allowCredentials: getRegistrations(),
+      allowCredentials: getRegistrations(options),
       userVerification: "discouraged",
     },
   });
@@ -99,6 +101,14 @@ addButtonFunctionality(
   ".auth-any-registration",
   { expectedResult: Result.Success },
   auth
+);
+
+addButtonFunctionality(
+  ".auth-trusted-device",
+  { expectedResult: Result.Success },
+  async () => {
+    auth();
+  }
 );
 
 addButtonFunctionality(

@@ -1,8 +1,10 @@
 import { PublicKeyCredentialWithAttestationJSON } from "@github/webauthn-json";
 import { Base64urlString } from "@github/webauthn-json/dist/types/base64url";
 
+export type RegistrationLevel = "security-key" | "trusted-device";
+
 type DatabaseRegistration = {
-  dbType: "security-key" | "trusted-device";
+  registrationLevel: RegistrationLevel;
   json: PublicKeyCredentialWithAttestationJSON;
 };
 
@@ -30,11 +32,18 @@ function setGlobalState(globalState: GlobalState): void {
 }
 
 export function getRegistrations(options?: {
+  registrationLevel?: RegistrationLevel;
   doNotExcludeKeyIds?: Base64urlString[];
 }): PublicKeyCredentialWithAttestationJSON[] {
   const dbRegistrations = getGlobalState()["dbRegistrations"];
   const filteredRegistrations: PublicKeyCredentialWithAttestationJSON[] = [];
   for (const dbRegistration of Object.values(dbRegistrations)) {
+    if (
+      options.registrationLevel &&
+      dbRegistration.registrationLevel !== options.registrationLevel
+    ) {
+      continue;
+    }
     if (!options?.doNotExcludeKeyIds?.includes(dbRegistration.json.id)) {
       filteredRegistrations.push(dbRegistration.json);
     }
@@ -52,7 +61,7 @@ export function saveRegistration(
 ): void {
   const globalState = getGlobalState();
   globalState.dbRegistrations[registrationJSON.id] = {
-    dbType: type,
+    registrationLevel: type,
     json: registrationJSON,
   };
   setGlobalState(globalState);
@@ -87,7 +96,7 @@ function updateDatabaseView() {
     tr.appendChild(document.createElement("td")).textContent =
       dbRegistration.json.id.slice(0, 8) + "…";
     tr.appendChild(document.createElement("td")).textContent =
-      dbRegistration.dbType;
+      dbRegistration.registrationLevel;
   }
 }
 updateDatabaseView();
