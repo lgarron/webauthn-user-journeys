@@ -2,7 +2,7 @@
 # https://github.com/lgarron/Makefile-scripts
 
 # Note: the first command becomes the default `make` target.
-NPM_COMMANDS = build dev
+NPM_COMMANDS = build dev clean
 
 .PHONY: $(NPM_COMMANDS)
 $(NPM_COMMANDS):
@@ -21,7 +21,7 @@ DEPLOY_SITE_PATH   = garron.net/temp/webauthn-user-journeys/
 DEPLOY_SFTP_PATH   = "towns.dreamhost.com:~/${DEPLOY_SITE_PATH}"
 
 .PHONY: deploy
-deploy: build
+deploy: clean build
 	rsync -avz \
 		--exclude .DS_Store \
 		--exclude .git \
