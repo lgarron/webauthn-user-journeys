@@ -1,5 +1,5 @@
 export enum Result {
-  UnknownError = "Unknown Error",
+  Unknown = "Unknown",
   InvalidStateError = "InvalidStateError",
   Success = "Success",
 }
@@ -29,15 +29,14 @@ export function addButtonFunctionality(
       matchElem.textContent = "…";
       outputElem.classList.add("waiting");
       matchElem.classList.add("waiting");
-      let result = Result.UnknownError;
+      let result = Result.Unknown;
       try {
         button.disabled = true;
         await fn();
         result = Result.Success;
       } catch (e) {
-        if (e.name === "InvalidStateError") {
-          result = Result.InvalidStateError;
-        }
+        result = e.name;
+        console.error(e);
       } finally {
         button.disabled = false;
       }

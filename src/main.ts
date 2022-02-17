@@ -46,7 +46,8 @@ async function registerTrustedDevice(options?: {
 async function registerSecurityKey(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
 }) {
-  const l: CredentialCreationOptionsJSON = {
+  console.log("registersecuireurwiuriower", options);
+  const cco: CredentialCreationOptionsJSON = {
     publicKey: {
       // <boilerplate>
       challenge: randomBase64urlBytes(),
@@ -64,8 +65,8 @@ async function registerSecurityKey(options?: {
       },
     },
   };
-  console.log(l);
-  const registration = await create(l);
+  console.log("create", cco);
+  const registration = await create(cco);
   saveRegistration("security-key", registration);
 }
 
@@ -107,7 +108,7 @@ addButtonFunctionality(
   ".auth-trusted-device",
   { expectedResult: Result.Success },
   async () => {
-    auth();
+    await auth({ registrationLevel: "trusted-device" });
   }
 );
 

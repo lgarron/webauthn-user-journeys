@@ -39,7 +39,7 @@ export function getRegistrations(options?: {
   const filteredRegistrations: PublicKeyCredentialWithAttestationJSON[] = [];
   for (const dbRegistration of Object.values(dbRegistrations)) {
     if (
-      options.registrationLevel &&
+      options?.registrationLevel &&
       dbRegistration.registrationLevel !== options.registrationLevel
     ) {
       continue;
@@ -48,6 +48,7 @@ export function getRegistrations(options?: {
       filteredRegistrations.push(dbRegistration.json);
     }
   }
+  console.log(filteredRegistrations);
   return filteredRegistrations;
 }
 
