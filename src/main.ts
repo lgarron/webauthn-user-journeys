@@ -116,6 +116,12 @@ addButtonFunctionality(
 
 addButtonFunctionality(
   ".register-trusted-device",
+  { expectedResult: Result.Success },
+  registerTrustedDevice
+);
+
+addButtonFunctionality(
+  ".register-duplicate-trusted-device",
   { expectedResult: Result.InvalidStateError },
   registerTrustedDevice
 );
