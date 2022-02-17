@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "devDependencies": {
+    "barely-a-dev-server": "^0.2.6"
+  },
+  "dependencies": {
+    "@github/webauthn-json": "^1.0.0"
+  }
+}

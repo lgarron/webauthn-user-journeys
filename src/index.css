@@ -1,0 +1,71 @@
+html, body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+body {
+  width: 80%;
+  max-width: 60rem;
+  margin: auto;
+}
+
+body {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+/* user-journeys {
+  display: grid;
+}
+
+user-journey {
+  display: grid;
+  grid-template-rows: 2em 1fr;
+}
+
+user-journey-steps {
+  display: grid;
+  grid-auto-flow: column;
+} */
+
+
+database-view {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  padding: 0.5em;
+}
+
+database-view table {
+  width: 100%;
+  position: sticky;
+  top: 0.5em;
+}
+
+database-view table thead {
+  text-decoration: underline;
+  font-weight: bold;;
+}
+
+output {
+  margin-left: 0.25em;
+}
+
+.spinner {
+  width: 4em;
+  height: 4em;
+  border-radius: 2.5em;
+  border: 0.5em solid rgba(0, 0, 0, 0);
+  border-top: 0.5em solid rgba(0, 0, 0, 0.7);
+  border-right: 0.5em solid rgba(0, 0, 0, 0.7);
+  animation: spinnerRotate 1s linear infinite;
+}
+
+@keyframes spinnerRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
