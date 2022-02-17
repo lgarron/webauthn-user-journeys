@@ -26,6 +26,11 @@
           <td>1.</td>
           <td><button class="clear-registrations">Clear</button></td>
         </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="5" class="tsection">Simulate an old security key registration</td>
+        </tr>
         <tr>
           <td>2.</td>
           <td><button class="register-security-key">Register security key</button></td>
@@ -34,9 +39,19 @@
           <td>3.</td>
           <td><button class="auth-any-registration">Authenticate</button></td>
         </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="5" class="tsection">Attempt to register as trusted device</td>
+        </tr>
         <tr>
           <td>4.</td>
           <td><button class="register-trusted-device">Register trusted device</button></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="5" class="tsection">Upgrade security key registration to trusted device</td>
         </tr>
         <tr>
           <td>5.</td>
@@ -52,8 +67,17 @@
         </tr>
       </tbody>
     </table>
-    <br>
-    This journey simulates a user who has registered a UVPA as a security key (steps 2-3), and is prompted
+    <p>
+      This journey simulates a situation where an RP implements a trusted device
+      feature, but has users with legacy registrations whose UV & PA status is not
+      known.
+    </p>
+    <p>
+      These steps simulate the &quot;worst case&quot; where the RP has no
+      information during step 4 about any potential existing registrations that
+      may work with the current device (and therefore all registrations are
+      listed in <code>excludeCredentials</code>).
+    </p>
   </user-journey>
   <database-view>
     Currently stored registrations:
