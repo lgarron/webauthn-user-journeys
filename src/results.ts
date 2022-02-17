@@ -8,7 +8,6 @@ export function addButtonFunctionality(
   selector: string,
   info: {
     expectedResult: Result;
-    alertMessage?: string;
   },
   fn: () => Promise<any>
 ) {
@@ -33,9 +32,6 @@ export function addButtonFunctionality(
       let result = Result.UnknownError;
       try {
         button.disabled = true;
-        // if (info.alertMessage) {
-        //   alert(info.alertMessage);
-        // }
         await fn();
         result = Result.Success;
       } catch (e) {
