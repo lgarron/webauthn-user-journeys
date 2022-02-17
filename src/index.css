@@ -63,3 +63,6 @@ output {
 		background-position: 0% 0%;
 	}
 }
+ .pre {
+   white-space: pre;
+ }

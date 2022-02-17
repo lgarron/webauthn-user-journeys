@@ -1,3 +1,6 @@
+import { Base64urlString } from "@github/webauthn-json/dist/types/base64url";
+import { truncateID } from "./state";
+
 export enum Result {
   Unknown = "Unknown",
   InvalidStateError = "InvalidStateError",
@@ -9,7 +12,7 @@ export function addButtonFunctionality(
   info: {
     expectedResult: Result;
   },
-  fn: () => Promise<any>
+  fn: () => Promise<string | { id: Base64urlString } | void>
 ) {
   for (const button of document.querySelectorAll(
     selector
@@ -24,6 +27,8 @@ export function addButtonFunctionality(
     addTD().textContent = info.expectedResult;
     const outputElem = addTD();
     const matchElem = addTD();
+    const infoElem = addTD();
+    infoElem.classList.add("pre");
     button.addEventListener("click", async () => {
       outputElem.textContent = "…";
       matchElem.textContent = "…";
@@ -32,11 +37,19 @@ export function addButtonFunctionality(
       let result = Result.Unknown;
       try {
         button.disabled = true;
-        await fn();
+        const returnValue = await fn();
         result = Result.Success;
+        if (typeof returnValue === "string") {
+          infoElem.textContent = returnValue;
+        } else if (returnValue && returnValue.id) {
+          infoElem.textContent = "Key ID: " + truncateID(returnValue.id);
+        } else {
+          infoElem.textContent = "N/A";
+        }
       } catch (e) {
         result = e.name;
         console.error(e);
+        infoElem.textContent = "See console";
       } finally {
         button.disabled = false;
       }

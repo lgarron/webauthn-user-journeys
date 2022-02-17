@@ -74,6 +74,10 @@ export function removeRegistration(keyId: Base64urlString): void {
   setGlobalState(globalState);
 }
 
+export function truncateID(keyID: Base64urlString): string {
+  return keyID.slice(0, 8) + "…";
+}
+
 const databaseView: HTMLElement = document.querySelector("database-view");
 function updateDatabaseView() {
   function createTable(): HTMLTableSectionElement {
@@ -94,8 +98,9 @@ function updateDatabaseView() {
     getGlobalState().dbRegistrations
   )) {
     const tr = tbody.appendChild(document.createElement("tr"));
-    tr.appendChild(document.createElement("td")).textContent =
-      dbRegistration.json.id.slice(0, 8) + "…";
+    tr.appendChild(document.createElement("td")).textContent = truncateID(
+      dbRegistration.json.id
+    );
     tr.appendChild(document.createElement("td")).textContent =
       dbRegistration.registrationLevel;
   }

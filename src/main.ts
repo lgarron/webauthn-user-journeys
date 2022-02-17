@@ -12,6 +12,7 @@ import {
   getRegistrations,
   removeRegistration,
   saveRegistration,
+  truncateID,
 } from "./state";
 
 function randomBase64urlBytes(n: number = 32): string {
@@ -41,6 +42,7 @@ async function registerTrustedDevice(options?: {
     },
   });
   saveRegistration("trusted-device", registration);
+  return registration;
 }
 
 async function registerSecurityKey(options?: {
@@ -67,6 +69,7 @@ async function registerSecurityKey(options?: {
   console.log("create", cco);
   const registration = await create(cco);
   saveRegistration("security-key", registration);
+  return registration;
 }
 
 async function auth(
@@ -107,7 +110,7 @@ addButtonFunctionality(
   ".auth-trusted-device",
   { expectedResult: Result.Success },
   async () => {
-    await auth({ registrationLevel: "trusted-device" });
+    return auth({ registrationLevel: "trusted-device" });
   }
 );
 
@@ -123,8 +126,8 @@ addButtonFunctionality(
   ".identify-existing-registration",
   { expectedResult: Result.Success },
   async () => {
-    const received = await auth();
-    identifiedRegistration = received;
+    identifiedRegistration = await auth();
+    return identifiedRegistration;
   }
 );
 
@@ -132,9 +135,11 @@ addButtonFunctionality(
   ".register-trusted-device-with-identified-exception",
   { expectedResult: Result.Success },
   async () => {
-    await registerTrustedDevice({
+    const newRegistration = await registerTrustedDevice({
       doNotExcludeKeyIds: [identifiedRegistration.id],
     });
     removeRegistration(identifiedRegistration.id);
+    return `Removed ID: ${truncateID(identifiedRegistration.id)}
+Registered ID: ${truncateID(newRegistration.id)}`;
   }
 );
