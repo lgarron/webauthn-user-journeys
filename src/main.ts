@@ -46,7 +46,6 @@ async function registerTrustedDevice(options?: {
 async function registerSecurityKey(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
 }) {
-  console.log("registersecuireurwiuriower", options);
   const cco: CredentialCreationOptionsJSON = {
     publicKey: {
       // <boilerplate>
@@ -121,7 +120,7 @@ addButtonFunctionality(
 let identifiedRegistration: PublicKeyCredentialWithAssertionJSON | null = null;
 
 addButtonFunctionality(
-  ".identify-existing-security-key-registration",
+  ".identify-existing-registration",
   { expectedResult: Result.Success },
   async () => {
     const received = await auth();

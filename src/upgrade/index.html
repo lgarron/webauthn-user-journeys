@@ -10,6 +10,7 @@
 
 <body>
   <user-journey>
+    <h1>Upgrade</h1>
     Use the same UVPA for all the following steps:<br><br>
     <table>
       <thead>
@@ -19,6 +20,7 @@
           <td>Expected</td>
           <td>Actual</td>
           <td>Matches Expected</td>
+          <td>Info</td>
         </tr>
       </thead>
       <tbody>
@@ -55,7 +57,7 @@
         </tr>
         <tr>
           <td>5.</td>
-          <td><button class="identify-existing-security-key-registration">Identify security key</button></td>
+          <td><button class="identify-existing-registration">Identify registration</button></td>
         </tr>
         <tr>
           <td>6.</td>
@@ -77,6 +79,10 @@
       information during step 4 about any potential existing registrations that
       may work with the current device (and therefore all registrations are
       listed in <code>excludeCredentials</code>).
+    </p>
+    <p>
+      Step 2 uses:
+      <code>{ &quot;userVerification&quot;: &quot;discouraged&quot; }</code>
     </p>
   </user-journey>
   <database-view>
