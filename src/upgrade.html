@@ -9,8 +9,8 @@
 </head>
 
 <body>
-  <user-journeys>
-
+  <div>
+    Use the same UVPA for all the following steps:<br><br>
     <table>
       <thead>
         <tr>
@@ -28,7 +28,7 @@
         </tr>
         <tr>
           <td>2.</td>
-          <td><button class="register-UVPA-security-key">Register UVPA security key</button></td>
+          <td><button class="register-security-key">Register security key</button></td>
         </tr>
         <tr>
           <td>3.</td>
@@ -48,38 +48,8 @@
         </tr>
       </tbody>
     </table>
-
-    <user-journey id="register">
-      <h1>Upgrading a security key to a trusted device</h1>
-      <user-journey-steps>
-        <user-journey-step>
-          <h2>1. Clear stored registrations</h2>
-          Reset everything for this flow.<br><br>
-          <button class="clear-registrations">Clear</button>
-        </user-journey-step>
-        <user-journey-step>
-          <h2>2. Register a security key</h2>
-          <button class="register-security-key">Register security key</button>
-        </user-journey-step>
-        <user-journey-step>
-          <h2>B. Test authentication ("server-side" credentials)</h2>
-          <button class="auth-any-registration">Authenticate</button>
-        </user-journey-step>
-        <user-journey-step>
-          <h2>3. Try to register a trusted device</h2>
-          <button class="register-trusted-device">Register</button>
-        </user-journey-step>
-        <user-journey-step>
-          <h2>4. Ask user to identify the exiting registration</h2>
-          <button class="identify-existing-security-key-registration">Identify</button>
-        </user-journey-step>
-        <user-journey-step>
-          <h2>5. Register trusted device, excluding the identified device from exceptions</h2>
-          <button class="register-trusted-device-with-identified-exception">Register</button>
-        </user-journey-step>
-      </user-journey-steps>
-    </user-journey>
-  </user-journeys>
+    </user-journeys>
+  </div>
   <database-view>
     Currently stored registrations:
   </database-view>

@@ -4,6 +4,7 @@ import {
   get,
   bufferToBase64url,
   type PublicKeyCredentialWithAssertionJSON,
+  type CredentialCreationOptionsJSON,
 } from "@github/webauthn-json/extended";
 import { addButtonFunctionality, Result } from "./results";
 import {
@@ -45,7 +46,7 @@ async function registerTrustedDevice(options?: {
 async function registerSecurityKey(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
 }) {
-  const registration = await create({
+  const l: CredentialCreationOptionsJSON = {
     publicKey: {
       // <boilerplate>
       challenge: randomBase64urlBytes(),
@@ -62,7 +63,9 @@ async function registerSecurityKey(options?: {
         userVerification: "discouraged",
       },
     },
-  });
+  };
+  console.log(l);
+  const registration = await create(l);
   saveRegistration("security-key", registration);
 }
 
@@ -83,23 +86,12 @@ addButtonFunctionality(
   },
   async () => {
     clearRegistrations();
-    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 );
 
 addButtonFunctionality(
   ".register-security-key",
   { expectedResult: Result.Success },
-  registerSecurityKey
-);
-
-addButtonFunctionality(
-  ".register-UVPA-security-key",
-  {
-    expectedResult: Result.Success,
-    alertMessage:
-      "In the following prompt, please make sure register a UVPA (e.g. Touch ID, Windows Hello), and use the same one for all subsequent prompts.",
-  },
   registerSecurityKey
 );
 
