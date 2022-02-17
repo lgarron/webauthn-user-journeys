@@ -1,10 +1,11 @@
 import { Base64urlString } from "@github/webauthn-json/dist/types/base64url";
 import {
+  bufferToBase64url,
   create,
   get,
-  bufferToBase64url,
-  type PublicKeyCredentialWithAssertionJSON,
   type CredentialCreationOptionsJSON,
+  type CredentialRequestOptionsJSON,
+  type PublicKeyCredentialWithAssertionJSON,
 } from "@github/webauthn-json/extended";
 import { addButtonFunctionality, Result } from "./results";
 import {
@@ -66,7 +67,7 @@ async function registerSecurityKey(options?: {
       },
     },
   };
-  console.log("create", cco);
+  console.log("Request for navigator.credentials.create", cco);
   const registration = await create(cco);
   saveRegistration("security-key", registration);
   return registration;
@@ -75,13 +76,15 @@ async function registerSecurityKey(options?: {
 async function auth(
   options?: Parameters<typeof getRegistrations>[0]
 ): Promise<PublicKeyCredentialWithAssertionJSON> {
-  return await get({
+  const cro: CredentialRequestOptionsJSON = {
     publicKey: {
       challenge: randomBase64urlBytes(),
       allowCredentials: getRegistrations(options),
       userVerification: "discouraged",
     },
-  });
+  };
+  console.log("Request for navigator.credentials.get", cro);
+  return await get(cro);
 }
 
 addButtonFunctionality(

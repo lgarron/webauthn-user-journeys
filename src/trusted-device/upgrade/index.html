@@ -82,8 +82,30 @@
       listed in <code>excludeCredentials</code>).
     </p>
     <p>
-      Step 2 uses:
-      <code>{ &quot;userVerification&quot;: &quot;discouraged&quot; }</code>
+      Step 2 uses:<br>
+      <code>&quot;authenticatorSelection&quot;: {<br>
+&nbsp;&nbsp;&quot;userVerification&quot;: &quot;discouraged&quot;<br>
+}
+</code>
+    </p>
+    <p>
+      Step 4 uses:<br>
+      <code>&quot;authenticatorSelection&quot;: {<br>
+&nbsp;&nbsp;&quot;authenticatorAttachment&quot;: &quot;platform&quot;,<br>
+&nbsp;&quot;userVerification&quot;: &quot;required&quot;<br>
+}<br>
+// ...<br>
+&quot;excludeCredentials: [/* all registered credentials  */]&quot;
+</code>
+    </p>
+    Step 6 uses:<br>
+    <code>&quot;authenticatorSelection&quot;: {<br>
+&nbsp;&nbsp;&quot;authenticatorAttachment&quot;: &quot;platform&quot;,<br>
+&nbsp;&quot;userVerification&quot;: &quot;required&quot;<br>
+}<br>
+// ...<br>
+&quot;excludeCredentials: [/* all registered credentials except the one identified in step 5 */]&quot;
+</code>
     </p>
   </user-journey>
   <database-view>
