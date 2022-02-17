@@ -5,6 +5,7 @@ import {
   bufferToBase64url,
   type PublicKeyCredentialWithAssertionJSON,
 } from "@github/webauthn-json/extended";
+import { addButtonFunctionality, Result } from "./results";
 import {
   clearRegistrations,
   getRegistrations,
@@ -75,52 +76,6 @@ async function auth(): Promise<PublicKeyCredentialWithAssertionJSON> {
   });
 }
 
-enum Result {
-  Success = "Success",
-  Error = "Error",
-}
-
-function addButtonFunctionality(
-  selector: string,
-  info: {
-    expectedResult: Result;
-  },
-  fn: () => Promise<void>
-) {
-  for (const button of document.querySelectorAll(
-    selector
-  ) as Iterable<HTMLButtonElement>) {
-    function addTD() {
-      const td = button.parentElement.parentElement.appendChild(
-        document.createElement("td")
-      );
-      td.textContent = "…";
-      return td;
-    }
-    addTD().textContent = info.expectedResult;
-    const outputElem = addTD();
-    const matchElem = addTD();
-    button.addEventListener("click", async () => {
-      outputElem.textContent = "…";
-      matchElem.textContent = "…";
-      outputElem.classList.add("waiting");
-      matchElem.classList.add("waiting");
-      let result = Result.Error;
-      try {
-        button.disabled = true;
-        await fn();
-        result = Result.Success;
-      } finally {
-        button.disabled = false;
-      }
-      // outputElem.classList.remove("waiting");
-      // matchElem.classList.remove("waiting");
-      outputElem.textContent = result;
-      matchElem.textContent = result === info.expectedResult ? "✅" : "❌";
-    });
-  }
-}
-
 addButtonFunctionality(
   ".clear-registrations",
   {
@@ -135,35 +90,49 @@ addButtonFunctionality(
 addButtonFunctionality(
   ".register-security-key",
   { expectedResult: Result.Success },
-  async () => {
-    await registerSecurityKey();
-  }
+  registerSecurityKey
 );
 
-for (const button of document.querySelectorAll(".auth-any-registration")) {
-  button.addEventListener("click", () => {
-    auth();
-  });
-}
+addButtonFunctionality(
+  ".register-UVPA-security-key",
+  {
+    expectedResult: Result.Success,
+    alertMessage:
+      "In the following prompt, please make sure register a UVPA (e.g. Touch ID, Windows Hello), and use the same one for all subsequent prompts.",
+  },
+  registerSecurityKey
+);
+
+addButtonFunctionality(
+  ".auth-any-registration",
+  { expectedResult: Result.Success },
+  auth
+);
+
+addButtonFunctionality(
+  ".register-trusted-device",
+  { expectedResult: Result.Error },
+  registerTrustedDevice
+);
 
 let identifiedRegistration: PublicKeyCredentialWithAssertionJSON | null = null;
 
-for (const button of document.querySelectorAll(
-  ".identify-existing-security-key-registration"
-)) {
-  button.addEventListener("click", async () => {
+addButtonFunctionality(
+  ".identify-existing-security-key-registration",
+  { expectedResult: Result.Success },
+  async () => {
     const received = await auth();
     identifiedRegistration = received;
-  });
-}
+  }
+);
 
-for (const button of document.querySelectorAll(
-  ".register-trusted-device-with-identified-exception"
-)) {
-  button.addEventListener("click", async () => {
+addButtonFunctionality(
+  ".register-trusted-device-with-identified-exception",
+  { expectedResult: Result.Success },
+  async () => {
     await registerTrustedDevice({
       doNotExcludeKeyIds: [identifiedRegistration.id],
     });
     removeRegistration(identifiedRegistration.id);
-  });
-}
+  }
+);
