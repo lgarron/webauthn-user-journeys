@@ -10,6 +10,45 @@
 
 <body>
   <user-journeys>
+
+    <table>
+      <thead>
+        <tr>
+          <td>Step #</td>
+          <td>Action</td>
+          <td>Actual</td>
+          <td>Expected</td>
+          <td>Match</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td><button class="clear-registrations">Clear</button></td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td><button class="register-security-key">Register security key</button></td>
+        </tr>
+        <tr>
+          <td><button class="auth-any-registration">Authenticate</button></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><button class="register-trusted-device">Register</button></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><button class="identify-existing-security-key-registration">Identify</button></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><button class="register-trusted-device-with-identified-exception">Register</button></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
     <user-journey id="register">
       <h1>Upgrading a security key to a trusted device</h1>
       <user-journey-steps>

@@ -51,21 +51,20 @@ output {
   margin-left: 0.25em;
 }
 
-.spinner {
-  width: 4em;
-  height: 4em;
-  border-radius: 2.5em;
-  border: 0.5em solid rgba(0, 0, 0, 0);
-  border-top: 0.5em solid rgba(0, 0, 0, 0.7);
-  border-right: 0.5em solid rgba(0, 0, 0, 0.7);
-  animation: spinnerRotate 1s linear infinite;
+td {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
 }
 
-@keyframes spinnerRotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }

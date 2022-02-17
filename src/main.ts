@@ -75,49 +75,68 @@ async function auth(): Promise<PublicKeyCredentialWithAssertionJSON> {
   });
 }
 
+enum Result {
+  Success = "Success",
+  Error = "Error",
+}
+
 function addButtonFunctionality(
   selector: string,
-  fn: (outputElem: HTMLElement) => void
+  info: {
+    expectedResult: Result;
+  },
+  fn: () => Promise<void>
 ) {
   for (const button of document.querySelectorAll(
     selector
   ) as Iterable<HTMLButtonElement>) {
-    const outputElem = document.createElement("output");
-    button.after(outputElem);
-    button.addEventListener("click", () => {
+    function addTD() {
+      const td = button.parentElement.parentElement.appendChild(
+        document.createElement("td")
+      );
+      td.textContent = "…";
+      return td;
+    }
+    addTD().textContent = info.expectedResult;
+    const outputElem = addTD();
+    const matchElem = addTD();
+    button.addEventListener("click", async () => {
+      outputElem.textContent = "…";
+      matchElem.textContent = "…";
+      outputElem.classList.add("waiting");
+      matchElem.classList.add("waiting");
+      let result = Result.Error;
       try {
         button.disabled = true;
-        outputElem.classList.add("spinner");
-        outputElem.textContent = "";
-        fn(outputElem);
+        await fn();
+        result = Result.Success;
       } finally {
         button.disabled = false;
-        outputElem.classList.remove("spinner");
       }
+      // outputElem.classList.remove("waiting");
+      // matchElem.classList.remove("waiting");
+      outputElem.textContent = result;
+      matchElem.textContent = result === info.expectedResult ? "✅" : "❌";
     });
   }
 }
 
-addButtonFunctionality(".clear-registrations", (outputElem: HTMLElement) => {
-  try {
+addButtonFunctionality(
+  ".clear-registrations",
+  {
+    expectedResult: Result.Success,
+  },
+  async () => {
     clearRegistrations();
-    outputElem.textContent = "✅ Cleared!";
-  } catch (e) {
-    outputElem.textContent = "❌ Failed to clear.";
-    throw e;
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
-});
+);
 
 addButtonFunctionality(
   ".register-security-key",
-  async (outputElem: HTMLElement) => {
-    try {
-      await registerSecurityKey();
-      outputElem.textContent = "Registration succeeded.";
-    } catch (e) {
-      outputElem.textContent = "Registration failed.";
-      throw e;
-    }
+  { expectedResult: Result.Success },
+  async () => {
+    await registerSecurityKey();
   }
 );
 
