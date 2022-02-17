@@ -48,7 +48,6 @@ export function getRegistrations(options?: {
       filteredRegistrations.push(dbRegistration.json);
     }
   }
-  console.log(filteredRegistrations);
   return filteredRegistrations;
 }
 
