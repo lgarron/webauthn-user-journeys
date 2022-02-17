@@ -16,20 +16,14 @@ body {
   gap: 1em;
 }
 
-/* user-journeys {
-  display: grid;
+user-journey table {
+  border-collapse: collapse;
 }
 
-user-journey {
-  display: grid;
-  grid-template-rows: 2em 1fr;
+user-journey td {
+  padding: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.25);
 }
-
-user-journey-steps {
-  display: grid;
-  grid-auto-flow: column;
-} */
-
 
 database-view {
   border: 1px solid rgba(0, 0, 0, 0.5);

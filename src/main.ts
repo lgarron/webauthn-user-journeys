@@ -103,7 +103,7 @@ addButtonFunctionality(
 
 addButtonFunctionality(
   ".register-trusted-device",
-  { expectedResult: Result.Error },
+  { expectedResult: Result.InvalidStateError },
   registerTrustedDevice
 );
 
