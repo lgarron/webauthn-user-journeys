@@ -10,7 +10,7 @@
 
 <body>
   <user-journey>
-    <h1>Upgrade</h1>
+    <h1>Re-association</h1>
     Use the same UVPA for all the following steps:<br><br>
     <table>
       <thead>
@@ -53,36 +53,25 @@
       </tbody>
       <tbody>
         <tr>
-          <td colspan="5" class="tsection">Upgrade security key registration to trusted device</td>
+          <td colspan="5" class="tsection">Identify existing registration</td>
         </tr>
         <tr>
           <td>5.</td>
           <td><button class="identify-existing-registration">Identify registration</button></td>
         </tr>
-        <tr>
-          <td>6.</td>
-          <td><button class="register-trusted-device-with-identified-exception">Upgrade to trusted device</button></td>
-        </tr>
-        <tr>
-          <td>7.</td>
-          <td><button class="auth-trusted-device">Authenticate trusted device</button></td>
-        </tr>
       </tbody>
     </table>
     <p>
-      This journey simulates a situation where an RP implements a trusted device
-      feature, but has users with legacy registrations whose UV & PA status is not
-      known.
+      This journey simulates a situation where a user has a trusted device registration, and then attempts to register
+      it again.
     </p>
     <p>
       These steps simulate the &quot;worst case&quot; where the RP has no
       information during step 4 about any potential existing registrations that
       may work with the current device (and therefore all registrations are
-      listed in <code>excludeCredentials</code>).
-    </p>
-    <p>
-      Step 2 uses:
-      <code>{ &quot;userVerification&quot;: &quot;discouraged&quot; }</code>
+      listed in <code>excludeCredentials</code>), e.g. because they've cleared
+      their cookies or are using a fresh browser profile with synced
+      credentials.
     </p>
   </user-journey>
   <database-view>
