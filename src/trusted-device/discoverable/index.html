@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf8">
+  <title>Trusted device upgrade</title>
+  <link rel="stylesheet" href="../../index.css">
+  <script src="../../main.js" type="module"></script>
+</head>
+
+<body>
+  <user-journey>
+    <h1>Discoverable trusted device</h1>
+    Use the same UVPA (with discoverable credential support) for all the following steps:<br><br>
+    <table>
+      <thead>
+        <tr>
+          <td>Step #</td>
+          <td>Action</td>
+          <td>Expected</td>
+          <td>Actual</td>
+          <td>Matches Expected</td>
+          <td>Details</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td><button class="clear-registrations">Clear</button></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="6" class="tsection">Register</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td><button class="register-discoverable-uvpa">Register discoverable UVPA</button></td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td><button class="auth-empty-allow-credentials">Authenticate</button> (expects the registration from the
+            previous step)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      This journey simulates a situation where an RP implements a discoverable <a
+        href="https://github.com/lgarron/webauthn-user-journeys/issues/1">trusted device</a>
+      and asks the user to perform a "passwordless" auth using it.
+    </p>
+    <p>
+      Step 2 uses:<br>
+      <code>&quot;authenticatorSelection&quot;: {<br>
+&nbsp;&nbsp;&quot;authenticatorAttachment&quot;: &quot;platform&quot;,<br>
+&nbsp;&nbsp;&quot;userVerification&quot;: &quot;required&quot;<br>
+&nbsp;&nbsp;&quot;requireResidentKey&quot;: true<br>
+}
+</code>
+    </p>
+    <p>
+      Step 3 uses:<br>
+      <code>&quot;allowCredentials&quot;: []
+</code>
+    </p>
+  </user-journey>
+  <database-view>
+    Currently stored registrations:
+  </database-view>
+</body>
+
+</html>

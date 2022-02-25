@@ -1,7 +1,10 @@
 import { PublicKeyCredentialWithAttestationJSON } from "@github/webauthn-json";
 import { Base64urlString } from "@github/webauthn-json/dist/types/base64url";
 
-export type RegistrationLevel = "security-key" | "trusted-device";
+export type RegistrationLevel =
+  | "security-key"
+  | "trusted-device"
+  | "discoverable-trusted-device";
 
 type DatabaseRegistration = {
   registrationLevel: RegistrationLevel;
@@ -32,20 +35,23 @@ function setGlobalState(globalState: GlobalState): void {
 }
 
 export function getRegistrations(options?: {
+  emptyAllowCredentials?: boolean;
   registrationLevel?: RegistrationLevel;
   doNotExcludeKeyIds?: Base64urlString[];
 }): PublicKeyCredentialWithAttestationJSON[] {
-  const dbRegistrations = getGlobalState()["dbRegistrations"];
   const filteredRegistrations: PublicKeyCredentialWithAttestationJSON[] = [];
-  for (const dbRegistration of Object.values(dbRegistrations)) {
-    if (
-      options?.registrationLevel &&
-      dbRegistration.registrationLevel !== options.registrationLevel
-    ) {
-      continue;
-    }
-    if (!options?.doNotExcludeKeyIds?.includes(dbRegistration.json.id)) {
-      filteredRegistrations.push(dbRegistration.json);
+  if (!options?.emptyAllowCredentials) {
+    const dbRegistrations = getGlobalState()["dbRegistrations"];
+    for (const dbRegistration of Object.values(dbRegistrations)) {
+      if (
+        options?.registrationLevel &&
+        dbRegistration.registrationLevel !== options.registrationLevel
+      ) {
+        continue;
+      }
+      if (!options?.doNotExcludeKeyIds?.includes(dbRegistration.json.id)) {
+        filteredRegistrations.push(dbRegistration.json);
+      }
     }
   }
   return filteredRegistrations;
@@ -56,7 +62,7 @@ export function clearRegistrations(): void {
 }
 
 export function saveRegistration(
-  type: "security-key" | "trusted-device",
+  type: RegistrationLevel,
   registrationJSON: PublicKeyCredentialWithAttestationJSON
 ): void {
   const globalState = getGlobalState();
