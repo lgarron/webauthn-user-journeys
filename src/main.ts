@@ -24,18 +24,22 @@ function randomBase64urlBytes(n: number = 32): string {
 async function registerTrustedDevice(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
   requireResidentKey?: boolean;
-  userUUID?: string;
+  userID?: Base64urlString;
 }) {
+  console.log("register!");
   const cco: CredentialCreationOptionsJSON = {
     publicKey: {
       // <boilerplate>
       challenge: randomBase64urlBytes(),
       rp: { name: "Localhost, Inc." },
       user: {
-        id: randomBase64urlBytes(),
-        name: "test_user" + (options?.userUUID ? " " + options.userUUID : ""),
+        id: options?.userID ?? randomBase64urlBytes(),
+        name:
+          "test_user" +
+          (options?.userID ? "_" + truncateID(options.userID) : ""),
         displayName:
-          "Test User" + (options?.userUUID ? " " + options.userUUID : ""),
+          "Test User" +
+          (options?.userID ? " " + truncateID(options.userID) : ""),
       },
       pubKeyCredParams: [{ type: "public-key", alg: -7 }],
       excludeCredentials: getRegistrations(options),
@@ -46,6 +50,7 @@ async function registerTrustedDevice(options?: {
       },
     },
   };
+  console.log(cco);
   if (options?.requireResidentKey) {
     cco.publicKey.authenticatorSelection.requireResidentKey = true;
   }
@@ -173,15 +178,13 @@ addButtonFunctionality(
   ".register-discoverable-uvpa",
   { expectedResult: Result.Success },
   async () => {
-    const uuid = (crypto as any as { randomUUID: () => string })
-      .randomUUID()
-      .slice(0, 6);
+    const userID = "HARDCODED_ID";
     expectedDiscoverableRegistration = await registerTrustedDevice({
       requireResidentKey: true,
-      userUUID: uuid,
+      userID,
     });
     return `ID: ${truncateID(expectedDiscoverableRegistration.id)}
-User UUID: ${uuid}
+User UUID: ${userID}
 `;
   }
 );
