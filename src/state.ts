@@ -83,7 +83,19 @@ export function truncateID(keyID: Base64urlString): string {
   return keyID.slice(0, 8) + "…";
 }
 
+class UserAgentElement extends HTMLElement {
+  connectedCallback() {
+    this.appendChild(document.createElement("span")).textContent =
+      "Current User Agent";
+    this.appendChild(document.createElement("span")).textContent =
+      navigator.userAgent;
+  }
+}
+
+customElements.define("user-agent", UserAgentElement);
+
 const databaseView: HTMLElement = document.querySelector("database-view");
+databaseView.prepend(new UserAgentElement());
 function updateDatabaseView() {
   function createTable(): HTMLTableSectionElement {
     const table = databaseView.appendChild(document.createElement("table"));

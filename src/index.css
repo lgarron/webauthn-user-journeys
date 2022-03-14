@@ -63,6 +63,26 @@ output {
 		background-position: 0% 0%;
 	}
 }
- .pre {
-   white-space: pre;
- }
+
+.pre {
+  white-space: pre;
+}
+
+user-agent {
+  display: block;
+  margin-bottom: 0.5em;
+  background: rgba(0, 0, 0, 0.1);
+  border: rgba(0, 0, 0, 0.25);
+  padding: 0.5em;
+}
+
+user-agent span:first-child {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.25em;
+}
+
+user-agent span:last-child {
+  display: block;
+  font-family: monospace;
+}
