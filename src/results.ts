@@ -49,7 +49,12 @@ export function addButtonFunctionality(
       } catch (e) {
         result = e.name;
         console.error(e);
-        infoElem.textContent = "See console";
+        infoElem.textContent = "";
+        const button = infoElem.appendChild(document.createElement("button"));
+        button.textContent = "Show error text";
+        button.addEventListener("click", () => alert(e));
+        infoElem.appendChild(document.createElement("br"));
+        infoElem.append("(or open the console)");
       } finally {
         button.disabled = false;
       }
