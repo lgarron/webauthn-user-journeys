@@ -17,7 +17,7 @@ update-Makefile:
 	if [ "$(shell uname -s)" != "Darwin" ] ; then sed -i"" ${UPDATE_MAKEFILE_SED_ARGS} ; fi
 
 DEPLOY_SOURCE_PATH = ./dist/src/
-DEPLOY_SITE_PATH   = garron.net/temp/webauthn-user-journeys/
+DEPLOY_SITE_PATH   = garron.net/test/webauthn-user-journeys/
 DEPLOY_SFTP_PATH   = "towns.dreamhost.com:~/${DEPLOY_SITE_PATH}"
 
 .PHONY: deploy
