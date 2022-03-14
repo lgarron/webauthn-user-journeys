@@ -4,7 +4,7 @@
     "barely-a-dev-server": "^0.2.6"
   },
   "dependencies": {
-    "@github/webauthn-json": "^1.0.0"
+    "@github/webauthn-json": "^1.0.2"
   },
   "scripts": {
     "build": "node script/build.js",
