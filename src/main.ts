@@ -41,7 +41,7 @@ async function registerTrustedDevice(options?: {
           "Test User" +
           (options?.userID ? " " + truncateID(options.userID) : ""),
       },
-      pubKeyCredParams: [],
+      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
       excludeCredentials: getRegistrations(options),
       // </boilerplate>
       authenticatorSelection: {
@@ -77,7 +77,7 @@ async function registerSecurityKey(options?: {
         name: "test_user",
         displayName: "Test User",
       },
-      pubKeyCredParams: [],
+      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
       excludeCredentials: getRegistrations(options),
       // </boilerplate>
       authenticatorSelection: {
