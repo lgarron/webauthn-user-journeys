@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf8">
+  <title>pubKeyCredParams — Empty List</title>
+  <link rel="stylesheet" href="../../index.css">
+  <script src="../../main.js" type="module"></script>
+</head>
+
+<body>
+  <user-journey>
+    <h1>pubKeyCredParams — Empty List</h1>
+    <table>
+      <thead>
+        <tr>
+          <td>Step #</td>
+          <td>Action</td>
+          <td>Expected</td>
+          <td>Actual</td>
+          <td>Matches Expected</td>
+          <td>Details</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td><button class="clear-registrations">Clear</button></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="6" class="tsection">Register</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td><button class="register-pubKeyCredParams-empty-list">Register</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      This journey simulates an RP trying to be future-proof by using the &quot;default&quot;
+      <code>pubKeyCredParams</code> algs.
+    </p>
+    <p>
+      Step 2 uses:<br>
+      <code>&quot;pubKeyCredParams&quot;: []<br>
+</code>
+    </p>
+    <p>
+      Per the <a href="https://w3c.github.io/webauthn/#sctn-createCredential">WebAuthn spec</a> (step 10 of section
+      5.1.3. Create a New Credential), the browser should automatically use algs -7 (ES256) and -257 (RS256) when
+      <code>pubKeyCredParams</code> has size zero (i.e. is an empty list).
+    </p>
+  </user-journey>
+  <database-view>
+    Currently stored registrations:
+  </database-view>
+</body>
+
+</html>

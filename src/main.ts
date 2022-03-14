@@ -21,10 +21,16 @@ function randomBase64urlBytes(n: number = 32): string {
   return bufferToBase64url(crypto.getRandomValues(new Uint8Array(n)));
 }
 
+const ALL_CURRENT_PUBLIC_KEY_CRED_PARAMS: PublicKeyCredentialParameters[] = [
+  { type: "public-key", alg: -7 },
+  { type: "public-key", alg: -257 },
+];
+
 async function registerTrustedDevice(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
   requireResidentKey?: boolean;
   userID?: Base64urlString;
+  pubKeyCredParamsEmptyList?: boolean;
 }) {
   console.log("register!");
   const cco: CredentialCreationOptionsJSON = {
@@ -41,7 +47,9 @@ async function registerTrustedDevice(options?: {
           "Test User" +
           (options?.userID ? " " + truncateID(options.userID) : ""),
       },
-      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+      pubKeyCredParams: options?.pubKeyCredParamsEmptyList
+        ? []
+        : ALL_CURRENT_PUBLIC_KEY_CRED_PARAMS,
       excludeCredentials: getRegistrations(options),
       // </boilerplate>
       authenticatorSelection: {
@@ -66,6 +74,7 @@ async function registerTrustedDevice(options?: {
 
 async function registerSecurityKey(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
+  pubKeyCredParamsEmptyList?: boolean;
 }) {
   const cco: CredentialCreationOptionsJSON = {
     publicKey: {
@@ -77,7 +86,9 @@ async function registerSecurityKey(options?: {
         name: "test_user",
         displayName: "Test User",
       },
-      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+      pubKeyCredParams: options?.pubKeyCredParamsEmptyList
+        ? []
+        : ALL_CURRENT_PUBLIC_KEY_CRED_PARAMS,
       excludeCredentials: getRegistrations(options),
       // </boilerplate>
       authenticatorSelection: {
@@ -198,5 +209,13 @@ addButtonFunctionality(
       throw new Error("not the same registration!");
     }
     return result;
+  }
+);
+
+addButtonFunctionality(
+  ".register-pubKeyCredParams-empty-list",
+  { expectedResult: Result.Success },
+  async () => {
+    await registerSecurityKey({ pubKeyCredParamsEmptyList: true });
   }
 );
