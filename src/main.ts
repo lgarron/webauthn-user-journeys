@@ -29,10 +29,13 @@ const ALL_CURRENT_PUBLIC_KEY_CRED_PARAMS: PublicKeyCredentialParameters[] = [
 async function registerTrustedDevice(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
   requireResidentKey?: boolean;
+  discoverablePasskey?: boolean;
   userID?: Base64urlString;
   pubKeyCredParamsEmptyList?: boolean;
 }) {
   console.log("register!");
+  const userName =
+    "test_user" + (options?.userID ? "_" + truncateID(options.userID) : "");
   const cco: CredentialCreationOptionsJSON = {
     publicKey: {
       // <boilerplate>
@@ -40,9 +43,7 @@ async function registerTrustedDevice(options?: {
       rp: { name: "Localhost, Inc." },
       user: {
         id: options?.userID ?? randomBase64urlBytes(),
-        name:
-          "test_user" +
-          (options?.userID ? "_" + truncateID(options.userID) : ""),
+        name: userName,
         displayName:
           "Test User" +
           (options?.userID ? " " + truncateID(options.userID) : ""),
@@ -59,14 +60,17 @@ async function registerTrustedDevice(options?: {
     },
   };
   console.log(cco);
-  if (options?.requireResidentKey) {
+  if (options?.requireResidentKey || options?.discoverablePasskey) {
     cco.publicKey.authenticatorSelection.requireResidentKey = true;
   }
   const registration = await create(cco);
   saveRegistration(
-    options?.requireResidentKey
+    options?.discoverablePasskey
+      ? "discoverable-passkey"
+      : options?.requireResidentKey
       ? "discoverable-trusted-device"
       : "trusted-device",
+    userName,
     registration
   );
   return registration;
@@ -76,6 +80,7 @@ async function registerSecurityKey(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
   pubKeyCredParamsEmptyList?: boolean;
 }) {
+  const userName = "test_user";
   const cco: CredentialCreationOptionsJSON = {
     publicKey: {
       // <boilerplate>
@@ -83,7 +88,7 @@ async function registerSecurityKey(options?: {
       rp: { name: "Localhost, Inc." },
       user: {
         id: randomBase64urlBytes(),
-        name: "test_user",
+        name: userName,
         displayName: "Test User",
       },
       pubKeyCredParams: options?.pubKeyCredParamsEmptyList
@@ -98,7 +103,7 @@ async function registerSecurityKey(options?: {
   };
   console.log("Request for navigator.credentials.create", cco);
   const registration = await create(cco);
-  saveRegistration("security-key", registration);
+  saveRegistration("security-key", userName, registration);
   return registration;
 }
 
@@ -147,6 +152,27 @@ addButtonFunctionality(
 );
 
 addButtonFunctionality(
+  ".auth-discoverable-passkey-passwordless",
+  { expectedResult: Result.Success },
+  async () => {
+    const result = await auth({ emptyAllowCredentials: true });
+    console.log({ result });
+    if (result.id !== expectedDiscoverablePasskeyRegistration.id) {
+      throw new Error("not the same registration!");
+    }
+    return result;
+  }
+);
+
+addButtonFunctionality(
+  ".auth-discoverable-passkey",
+  { expectedResult: Result.Success },
+  async () => {
+    return auth({ registrationLevel: "discoverable-passkey" });
+  }
+);
+
+addButtonFunctionality(
   ".register-trusted-device",
   { expectedResult: Result.Success },
   registerTrustedDevice
@@ -156,6 +182,20 @@ addButtonFunctionality(
   ".register-duplicate-trusted-device",
   { expectedResult: Result.InvalidStateError },
   registerTrustedDevice
+);
+
+const discoverablePasskeyUserID = "DISCOVERABLE_PASSKEY_USER_";
+
+addButtonFunctionality(
+  ".register-duplicate-discoverable-passkey",
+  { expectedResult: Result.InvalidStateError },
+  () => {
+    return registerTrustedDevice({
+      discoverablePasskey: true,
+      pubKeyCredParamsEmptyList: true,
+      userID: discoverablePasskeyUserID,
+    });
+  }
 );
 
 let identifiedRegistration: PublicKeyCredentialWithAssertionJSON | null = null;
@@ -179,6 +219,25 @@ addButtonFunctionality(
     removeRegistration(identifiedRegistration.id);
     return `Removed ID: ${truncateID(identifiedRegistration.id)}
 Registered ID: ${truncateID(newRegistration.id)}`;
+  }
+);
+
+let expectedDiscoverablePasskeyRegistration: PublicKeyCredentialWithAttestationJSON | null =
+  null;
+
+addButtonFunctionality(
+  ".register-discoverable-passkey-with-identified-exception",
+  { expectedResult: Result.Success },
+  async () => {
+    expectedDiscoverablePasskeyRegistration = await registerTrustedDevice({
+      doNotExcludeKeyIds: [identifiedRegistration.id],
+      discoverablePasskey: true,
+      pubKeyCredParamsEmptyList: true,
+      userID: discoverablePasskeyUserID,
+    });
+    removeRegistration(identifiedRegistration.id);
+    return `Removed ID: ${truncateID(identifiedRegistration.id)}
+Registered ID: ${truncateID(expectedDiscoverablePasskeyRegistration.id)}`;
   }
 );
 

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf8">
+  <title>Discoverable passkey upgrade</title>
+  <link rel="stylesheet" href="../../index.css">
+  <script src="../../main.js" type="module"></script>
+</head>
+
+<body>
+  <user-journey>
+    <h1>Discoverable passkey upgrade</h1>
+    Use the same UVPA with discoverable credential support (e.g. Touch ID or Windows Hello) for all the following
+    steps:<br><br>
+    <table>
+      <thead>
+        <tr>
+          <td>Step #</td>
+          <td>Action</td>
+          <td>Expected</td>
+          <td>Actual</td>
+          <td>Matches Expected</td>
+          <td>Details</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td><button class="clear-registrations">Clear</button></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="6" class="tsection">Simulate an old security key registration</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td><button class="register-security-key">Register as security key</button></td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td><button class="auth-any-registration">Authenticate</button></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="6" class="tsection">Attempt to register as discoverable passkey</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td><button class="register-duplicate-discoverable-passkey">Register as discoverable passkey</button></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="6" class="tsection">Upgrade security key registration to discoverable passkey</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td><button class="identify-existing-registration">Identify registration</button></td>
+        </tr>
+        <tr>
+          <td>6.</td>
+          <td><button class="register-discoverable-passkey-with-identified-exception">Upgrade to discoverable
+              passkey</button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="6" class="tsection">Verify discoverable passkey registration</td>
+        </tr>
+        <tr>
+          <td>7.</td>
+          <td><button class="auth-discoverable-passkey-passwordless">Authenticate discoverable passkey
+              (passwordless)</button></td>
+        </tr>
+        <tr>
+          <td>8.</td>
+          <td><button class="auth-discoverable-passkey">Authenticate discoverable passkey (using
+              <code>allowCredentials</code>)</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      This journey simulates the following situation:
+    <ul>
+      <li>An RP has historically supported &quot;security keys&quot;, and a user has registered a platform authenticator
+        as
+        security key (steps 2-3).</li>
+      <li>The RP has added discoverable passkey functionality.</li>
+      <li>The user is now registering the same platform authenticator as a discoverable passkey, and the RP needs to
+        make
+        sure that this doesn't silently break
+        the security key registration (steps 4-6).
+        <ul>
+          <li>If the RP did not take care, most major browsers would <a
+              href="https://github.com/w3c/webauthn/issues/1569">overwrite</a> the security
+            key
+            registration with the passkey registration, but there would be no way to tell. The
+            user could plausibly think &quot;I can remove
+            this passkey
+            registration, it's still registered as a security key&quot;, only to find that the security key registration
+            is
+            no
+            longer possible to use at all.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    Informally, the RP is &quot;upgrading&quot; is platform authenticator from a security key registration (UVPA/RK
+    status
+    potentially unknown) to a discoverable passkey registration in step 6.
+    <br>
+    <br>
+    Note that this particular flow still has a flaw: there is no guarantee to the RP that that the device
+    identified in step 5 is the same one registered in step 6. This is not an issue in practice, so long as device
+    supports at most platform authenticator. However, it would be nice to address this issue while also improving
+    the UX of this flow, by <a href="https://github.com/w3c/webauthn/issues/1568">consolidating steps 4-6</a>.
+    </p>
+
+    <p>
+      Step 2 uses:
+    <ul>
+      <li>
+        <code>&quot;authenticatorSelection&quot;: {<br>
+            &nbsp;&nbsp;&quot;userVerification&quot;: &quot;discouraged&quot;<br>
+            }</code>
+      </li>
+      <li>
+        <code>&quot;pubKeyCredParams&quot;: []</code>
+      </li>
+    </ul>
+    </p>
+    </p>
+    <p>
+      Steps 4 and 6 use:<br>
+      <code>&quot;authenticatorSelection&quot;: {<br>
+&nbsp;&nbsp;&quot;authenticatorAttachment&quot;: &quot;platform&quot;,<br>
+&nbsp;&nbsp;&quot;userVerification&quot;: &quot;required&quot;<br>
+&nbsp;&nbsp;&quot;requireResidentKey&quot;: true<br>
+}<br>
+&quot;pubKeyCredParams&quot;: []
+</code>
+    </p>
+    <p>
+      Step 7 uses:<br>
+      <code>&quot;allowCredentials&quot;: []
+</code>
+    </p>
+    <p>
+      Step 8 uses:<br>
+      <code>&quot;allowCredentials&quot;: [/* registration from step 6 */]
+    </code>
+    </p>
+  </user-journey>
+  <database-view>
+    Currently stored registrations:
+  </database-view>
+</body>
+
+</html>

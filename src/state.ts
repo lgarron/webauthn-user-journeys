@@ -4,10 +4,12 @@ import { Base64urlString } from "@github/webauthn-json/dist/types/base64url";
 export type RegistrationLevel =
   | "security-key"
   | "trusted-device"
-  | "discoverable-trusted-device";
+  | "discoverable-trusted-device"
+  | "discoverable-passkey";
 
 type DatabaseRegistration = {
   registrationLevel: RegistrationLevel;
+  userName: string;
   json: PublicKeyCredentialWithAttestationJSON;
 };
 
@@ -63,11 +65,13 @@ export function clearRegistrations(): void {
 
 export function saveRegistration(
   type: RegistrationLevel,
+  userName: string,
   registrationJSON: PublicKeyCredentialWithAttestationJSON
 ): void {
   const globalState = getGlobalState();
   globalState.dbRegistrations[registrationJSON.id] = {
     registrationLevel: type,
+    userName,
     json: registrationJSON,
   };
   setGlobalState(globalState);
@@ -102,6 +106,7 @@ function updateDatabaseView() {
     table.innerHTML = `
 <thead>
   <td>Key ID</td>
+  <td>User Name</td>
   <td>Registration Level</td>
 </thead>
 <tbody>
@@ -118,6 +123,8 @@ function updateDatabaseView() {
     tr.appendChild(document.createElement("td")).textContent = truncateID(
       dbRegistration.json.id
     );
+    tr.appendChild(document.createElement("td")).textContent =
+      dbRegistration.userName;
     tr.appendChild(document.createElement("td")).textContent =
       dbRegistration.registrationLevel;
   }
