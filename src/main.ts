@@ -51,7 +51,10 @@ async function registerTrustedDevice(options?: {
       pubKeyCredParams: options?.pubKeyCredParamsEmptyList
         ? []
         : ALL_CURRENT_PUBLIC_KEY_CRED_PARAMS,
-      excludeCredentials: getRegistrations(options),
+      excludeCredentials: getRegistrations({
+        ...options,
+        forRegistration: true,
+      }),
       // </boilerplate>
       authenticatorSelection: {
         authenticatorAttachment: "platform",
