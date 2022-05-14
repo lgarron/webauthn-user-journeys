@@ -51,10 +51,7 @@ async function registerTrustedDevice(options?: {
       pubKeyCredParams: options?.pubKeyCredParamsEmptyList
         ? []
         : ALL_CURRENT_PUBLIC_KEY_CRED_PARAMS,
-      excludeCredentials: getRegistrations({
-        ...options,
-        forRegistration: true,
-      }),
+      excludeCredentials: getRegistrations(options),
       // </boilerplate>
       authenticatorSelection: {
         authenticatorAttachment: "platform",
@@ -168,10 +165,13 @@ addButtonFunctionality(
 );
 
 addButtonFunctionality(
-  ".auth-discoverable-passkey",
+  ".auth-discoverable-passkey-with-allow-credentials",
   { expectedResult: Result.Success },
   async () => {
-    return auth({ registrationLevel: "discoverable-passkey" });
+    return auth({
+      registrationLevel: "discoverable-passkey",
+      expectNonEmptyAllowCredentials: true,
+    });
   }
 );
 

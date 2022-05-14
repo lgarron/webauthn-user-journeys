@@ -37,7 +37,7 @@ function setGlobalState(globalState: GlobalState): void {
 }
 
 export function getRegistrations(options?: {
-  forRegistration?: boolean;
+  expectNonEmptyAllowCredentials?: boolean;
   emptyAllowCredentials?: boolean;
   registrationLevel?: RegistrationLevel;
   doNotExcludeKeyIds?: Base64urlString[];
@@ -57,7 +57,10 @@ export function getRegistrations(options?: {
       }
     }
   }
-  if (!options?.forRegistration && filteredRegistrations.length === 0) {
+  if (
+    options?.expectNonEmptyAllowCredentials &&
+    filteredRegistrations.length === 0
+  ) {
     throw new Error("No available registrations.");
   }
   return filteredRegistrations;
