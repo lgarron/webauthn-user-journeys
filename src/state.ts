@@ -56,6 +56,9 @@ export function getRegistrations(options?: {
       }
     }
   }
+  if (filteredRegistrations.length === 0) {
+    throw new Error("No available registrations.");
+  }
   return filteredRegistrations;
 }
 
