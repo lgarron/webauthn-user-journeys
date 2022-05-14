@@ -11,8 +11,17 @@
 <body>
   <user-journey>
     <h1>Discoverable passkey upgrade</h1>
-    Use the same UVPA with discoverable credential support (e.g. Touch ID or Windows Hello) for all the following
-    steps:<br><br>
+    <p>
+      Use the same UVPA with discoverable credential support (e.g. Touch ID or Windows Hello) for all the following
+      steps:
+    </p>
+
+    <noscript>
+      <p style="background: rgba(255, 0, 0, 0.1); padding: 0.5em; color: red;">
+        Make sure to enable JavaScript if you want to use this test page.
+      </p>
+    </noscript>
+
     <table>
       <thead>
         <tr>
@@ -121,18 +130,10 @@
     </p>
 
     <p>
-      Step 2 uses:
-    <ul>
-      <li>
-        <code>&quot;authenticatorSelection&quot;: {<br>
+      Step 2 uses:<br>
+      <code>&quot;authenticatorSelection&quot;: {<br>
             &nbsp;&nbsp;&quot;userVerification&quot;: &quot;discouraged&quot;<br>
             }</code>
-      </li>
-      <li>
-        <code>&quot;pubKeyCredParams&quot;: []</code>
-      </li>
-    </ul>
-    </p>
     </p>
     <p>
       Steps 4 and 6 use:<br>
@@ -141,7 +142,6 @@
 &nbsp;&nbsp;&quot;userVerification&quot;: &quot;required&quot;<br>
 &nbsp;&nbsp;&quot;requireResidentKey&quot;: true<br>
 }<br>
-&quot;pubKeyCredParams&quot;: []
 </code>
     </p>
     <p>
