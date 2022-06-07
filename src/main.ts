@@ -79,17 +79,22 @@ async function registerTrustedDevice(options?: {
 async function registerSecurityKey(options?: {
   doNotExcludeKeyIds?: Base64urlString[];
   pubKeyCredParamsEmptyList?: boolean;
+  userID?: Base64urlString;
 }) {
-  const userName = "test_user";
+  // const userName = "test_user";
+  const userName =
+    "test_user" + (options?.userID ? "_" + truncateID(options.userID) : "");
   const cco: CredentialCreationOptionsJSON = {
     publicKey: {
       // <boilerplate>
       challenge: randomBase64urlBytes(),
       rp: { name: "Localhost, Inc." },
       user: {
-        id: randomBase64urlBytes(),
+        id: options?.userID ?? randomBase64urlBytes(),
         name: userName,
-        displayName: "Test User",
+        displayName:
+          "Test User" +
+          (options?.userID ? " " + truncateID(options.userID) : ""),
       },
       pubKeyCredParams: options?.pubKeyCredParamsEmptyList
         ? []
@@ -135,6 +140,12 @@ addButtonFunctionality(
   ".register-security-key",
   { expectedResult: Result.Success },
   registerSecurityKey
+);
+
+addButtonFunctionality(
+  ".register-security-key-with-discoverable-username",
+  { expectedResult: Result.Success },
+  () => registerSecurityKey({ userID: discoverablePasskeyUserID })
 );
 
 addButtonFunctionality(
