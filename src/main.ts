@@ -206,7 +206,6 @@ addButtonFunctionality(
   () => {
     return registerTrustedDevice({
       discoverablePasskey: true,
-      pubKeyCredParamsEmptyList: true,
       userID: discoverablePasskeyUserID,
     });
   }
@@ -246,7 +245,6 @@ addButtonFunctionality(
     expectedDiscoverablePasskeyRegistration = await registerTrustedDevice({
       doNotExcludeKeyIds: [identifiedRegistration.id],
       discoverablePasskey: true,
-      pubKeyCredParamsEmptyList: true,
       userID: discoverablePasskeyUserID,
     });
     removeRegistration(identifiedRegistration.id);
